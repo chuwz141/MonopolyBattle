@@ -1,13 +1,16 @@
-import { Decision, GamePhase, LeaderboardEntry } from '@monopoly/shared';
+import { Decision, GamePhase, LeaderboardEntry, SOCKET_EVENTS, GameEvent } from '@monopoly/shared';
 import { v4 as uuid } from 'uuid';
 import { getDatabase } from '../config/database.js';
 import { GameRepository } from '../repositories/game.repository.js';
 import { TeamRepository } from '../repositories/team.repository.js';
 import { RoundRepository } from '../repositories/round.repository.js';
 import { DecisionLogRepository } from '../repositories/decision-log.repository.js';
+import { RoundEventRepository } from '../repositories/round-event.repository.js';
 import { DecisionEngine, BASE_EFFECTS, DECISION_TYPES, DecisionType, StatsDelta } from './decision.engine.js';
 import { SeededRNG } from '../utils/random.js';
 import { logger } from '../utils/logger.js';
+import { maybeGenerateEvent, applyEvent } from './event.engine.js';
+import { emitToRoom } from '../socket/index.js';
 
 export interface GameEngineCallbacks {
   onRoundStart: (roundNumber: number, decisions: Decision[], duration: number) => void;
@@ -35,7 +38,7 @@ export class ServerGameState {
   public teams: Map<string, InMemoryTeamState>;
   public availableDecisions: Decision[];
   public submittedDecisions: Map<string, string>; // teamId -> decisionType
-  public currentEvent: any | null; // Reserved for future event engine integration
+  public currentEvent: GameEvent | null; // Reserved for future event engine integration
   public seed: string;
 
   private roundTimer: NodeJS.Timeout | null = null;
@@ -195,6 +198,39 @@ export class ServerGameState {
       team.monopolyRisk = Math.min(100, Math.max(0, team.monopolyRisk + delta.monopolyRisk));
     }
 
+    // 1.1 Generate and apply random event
+    const eventRng = new SeededRNG(`${this.seed}_round_${this.currentRound}_event`);
+    const triggeredEvent = maybeGenerateEvent(this.currentRound, eventRng);
+
+    this.currentEvent = triggeredEvent;
+
+    if (triggeredEvent) {
+      const eventDeltas = applyEvent(triggeredEvent, activeTeams, eventRng);
+
+      for (const team of activeTeams) {
+        const eDelta = eventDeltas.get(team.id);
+        if (eDelta) {
+          team.money = Math.max(0, team.money + eDelta.money);
+          team.marketShare = Math.min(100, Math.max(0, Number((team.marketShare + eDelta.marketShare).toFixed(1))));
+          team.technology = Math.min(100, Math.max(0, team.technology + eDelta.technology));
+          team.reputation = Math.min(100, Math.max(0, team.reputation + eDelta.reputation));
+          team.monopolyRisk = Math.min(100, Math.max(0, team.monopolyRisk + eDelta.monopolyRisk));
+        }
+      }
+
+      // Broadcast event:triggered to all clients in the game room
+      try {
+        emitToRoom(`room:${this.gameId}`, SOCKET_EVENTS.EVENT_TRIGGERED, {
+          eventType: triggeredEvent.type,
+          title: triggeredEvent.titleVi,
+          description: triggeredEvent.descriptionVi,
+          effects: triggeredEvent.effects,
+        });
+      } catch (err) {
+        logger.error({ gameId: this.gameId, err }, 'Failed to broadcast event:triggered socket event.');
+      }
+    }
+
     // 2. Persist to DB if database is connected
     try {
       const activeDb = this.db || getDatabase();
@@ -202,6 +238,35 @@ export class ServerGameState {
         const roundRepo = new RoundRepository(activeDb);
         const round = roundRepo.findByGameIdAndRoundNumber(this.gameId, this.currentRound);
         if (round) {
+          // If event was triggered, update round record and save to round_event
+          if (triggeredEvent) {
+            roundRepo.update(round.id, { eventId: triggeredEvent.id });
+
+            const roundEventRepo = new RoundEventRepository(activeDb);
+            const eventDeltas = applyEvent(triggeredEvent, activeTeams, eventRng);
+            const targetedTeamIds = Array.from(eventDeltas.entries())
+              .filter(([_, delta]) => (
+                delta.money !== 0 ||
+                delta.marketShare !== 0 ||
+                delta.technology !== 0 ||
+                delta.reputation !== 0 ||
+                delta.monopolyRisk !== 0
+              ))
+              .map(([teamId]) => teamId);
+
+            roundEventRepo.create({
+              id: uuid(),
+              roundId: round.id,
+              eventType: triggeredEvent.type,
+              eventDataJson: JSON.stringify({
+                effects: triggeredEvent.effects,
+                targets: targetedTeamIds,
+              }),
+              narrationText: triggeredEvent.descriptionVi,
+              createdAt: new Date().toISOString(),
+            });
+          }
+
           this.persistRoundResults(round.id, results);
         }
       }
