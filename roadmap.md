@@ -22,16 +22,16 @@ gantt
     Auth endpoints               :done, d1d, after d1c, 2h
 
     section Day 2 — Real-time Core
-    Socket.IO server setup       :d2a, 2, 1h
-    Connection + room handlers   :d2b, after d2a, 2h
-    Game engine core loop        :d2c, after d2b, 3h
-    Decision engine              :d2d, after d2c, 2h
+    Socket.IO server setup       :done, d2a, 2, 1h
+    Connection + room handlers   :done, d2b, after d2a, 2h
+    Game engine core loop        :done, d2c, after d2b, 3h
+    Decision engine              :done, d2d, after d2c, 2h
 
     section Day 3 — Game Logic
-    Event engine                 :d3a, 3, 2h
-    Monopoly detector            :d3b, after d3a, 1h
-    Scoring engine               :d3c, after d3b, 2h
-    Narrator template system     :d3d, after d3c, 3h
+    Event engine                 :done, d3a, 3, 2h
+    Monopoly detector            :done, d3b, after d3a, 1h
+    Scoring engine               :done, d3c, after d3b, 2h
+    Narrator template system     :done, d3d, after d3c, 3h
 
     section Day 4 — Frontend Core
     Next.js setup + design sys   :done, d4a, 4, 2h
@@ -117,16 +117,16 @@ gantt
 
 **Goal:** Mono-repo structure created, all packages initialized.
 
-- [ ] Create client/, server/, shared/ workspace structure
-- [ ] Initialize root package.json with npm workspaces
-- [ ] Install server core deps: express socket.io better-sqlite3 jsonwebtoken cors helmet express-rate-limit pino uuid seedrandom
-- [ ] Install server dev deps: typescript ts-node nodemon @types/*
-- [ ] Configure server/tsconfig.json (strict mode)
-- [ ] Run: npx create-next-app@latest client/ --typescript --tailwind --app --eslint
-- [ ] Install client deps: zustand framer-motion socket.io-client
-- [ ] Install shadcn/ui and add components: button card dialog badge progress toast
-- [ ] Configure shared/ package with shared types
-- [ ] Verify npm run dev works in both client/ and server/
+- [x] Create client/, server/, shared/ workspace structure
+- [x] Initialize root package.json with npm workspaces
+- [x] Install server core deps: express socket.io better-sqlite3 jsonwebtoken cors helmet express-rate-limit pino uuid seedrandom
+- [x] Install server dev deps: typescript ts-node nodemon @types/*
+- [x] Configure server/tsconfig.json (strict mode)
+- [x] Run: npx create-next-app@latest client/ --typescript --tailwind --app --eslint
+- [x] Install client deps: zustand framer-motion socket.io-client
+- [x] Install shadcn/ui and add components: button card dialog badge progress toast
+- [x] Configure shared/ package with shared types
+- [x] Verify npm run dev works in both client/ and server/
 
 **Deliverable:** Both dev servers start without errors
 
@@ -136,16 +136,16 @@ gantt
 
 **Goal:** Express server with all middleware configured.
 
-- [ ] Create server/src/index.ts — Express + Socket.IO bootstrap
-- [ ] Configure middleware: cors, helmet, express-rate-limit
-- [ ] Create server/src/config/index.ts — env var loading with validation
-- [ ] Create server/src/config/database.ts — SQLite init with WAL + pragmas
-- [ ] Create server/src/utils/logger.ts — pino logger
-- [ ] Create server/src/utils/room-code.ts — 6-char code generator
-- [ ] Create server/src/utils/random.ts — seeded RNG wrapper
-- [ ] Create server/src/middleware/auth.middleware.ts — JWT validation
-- [ ] Create server/src/middleware/error.middleware.ts — global error handler
-- [ ] Health check: GET /api/health returns { status: 'ok' }
+- [x] Create server/src/index.ts — Express + Socket.IO bootstrap
+- [x] Configure middleware: cors, helmet, express-rate-limit
+- [x] Create server/src/config/index.ts — env var loading with validation
+- [x] Create server/src/config/database.ts — SQLite init with WAL + pragmas
+- [x] Create server/src/utils/logger.ts — pino logger
+- [x] Create server/src/utils/room-code.ts — 6-char code generator
+- [x] Create server/src/utils/random.ts — seeded RNG wrapper
+- [x] Create server/src/middleware/auth.middleware.ts — JWT validation
+- [x] Create server/src/middleware/error.middleware.ts — global error handler
+- [x] Health check: GET /api/health returns { status: 'ok' }
 
 **Deliverable:** curl http://localhost:4000/api/health returns 200
 
@@ -155,13 +155,13 @@ gantt
 
 **Goal:** All 7 tables created with indexes and relationships.
 
-- [ ] Create server/migrations/001_initial.sql with full schema
-- [ ] Tables: game, team, player, round, decision_log, round_event, quiz_answer
-- [ ] Create all indexes from architecture section 4.2
-- [ ] Create server/src/repositories/ with one repo per table
-- [ ] Each repository exposes: findById, create, update, findMany
-- [ ] Run migrations automatically on server startup
-- [ ] Create scripts/seed-db.ts for dev testing
+- [x] Create server/migrations/001_initial.sql with full schema
+- [x] Tables: game, team, player, round, decision_log, round_event, quiz_answer
+- [x] Create all indexes from architecture section 4.2
+- [x] Create server/src/repositories/ with one repo per table
+- [x] Each repository exposes: findById, create, update, findMany
+- [x] Run migrations automatically on server startup
+- [x] Create scripts/seed-db.ts for dev testing
 
 **Deliverable:** DB file created, all tables present, seed data insertable
 
@@ -171,16 +171,16 @@ gantt
 
 **Goal:** Host and player can authenticate and get tokens.
 
-- [ ] Create shared/types/: game.types.ts, team.types.ts, quiz.types.ts, socket-events.ts
-- [ ] Create server/src/controllers/auth.controller.ts:
+- [x] Create shared/types/: game.types.ts, team.types.ts, quiz.types.ts, socket-events.ts
+- [x] Create server/src/controllers/auth.controller.ts:
   - POST /api/auth/host — verify PIN, return host JWT
   - POST /api/auth/join — verify room code, create player + team, return JWT
-- [ ] Create server/src/controllers/game.controller.ts:
+- [x] Create server/src/controllers/game.controller.ts:
   - POST /api/games — host creates game, returns room code
   - GET /api/games/:id — get game state
-- [ ] Create server/src/services/game.service.ts
-- [ ] Create server/src/services/team.service.ts
-- [ ] Test all endpoints
+- [x] Create server/src/services/game.service.ts
+- [x] Create server/src/services/team.service.ts
+- [x] Test all endpoints
 
 **Deliverable:** Host authenticates; player joins with room code; JWT returned
 
@@ -200,11 +200,11 @@ gantt
 
 #### Task 5 — Socket.IO Server Setup `1h` `Critical`
 
-- [ ] Create server/src/socket/index.ts — Socket.IO server with JWT auth middleware
-- [ ] Extract + verify JWT from socket.handshake.auth.token
-- [ ] Attach role, gameId, teamId to socket.data
-- [ ] Sockets join room:{gameId} and team:{teamId}
-- [ ] Create typed socket emit wrapper
+- [x] Create server/src/socket/index.ts — Socket.IO server with JWT auth middleware
+- [x] Extract + verify JWT from socket.handshake.auth.token
+- [x] Attach role, gameId, teamId to socket.data
+- [x] Sockets join room:{gameId} and team:{teamId}
+- [x] Create typed socket emit wrapper
 
 **Deliverable:** Socket.IO server starts; client connects with token
 
@@ -212,17 +212,17 @@ gantt
 
 #### Task 6 — Connection & Room Handlers `2h` `Critical`
 
-- [ ] Create server/src/socket/connection.handler.ts:
+- [x] Create server/src/socket/connection.handler.ts:
   - connect: join rooms, update player socket_id, broadcast team:joined
   - disconnect: mark disconnected, start 30s grace timer
   - player:ready: mark team ready, broadcast team:ready
   - projector:join: join projector room (read-only)
-- [ ] Create server/src/socket/host-event.handler.ts:
+- [x] Create server/src/socket/host-event.handler.ts:
   - host:start-game: validate 2+ ready teams, emit game:countdown
   - host:pause / host:resume: toggle pause state
   - host:next-phase: manual phase advance
-- [ ] Implement 5-second countdown then start round 1
-- [ ] Broadcast game:phase-change on every transition
+- [x] Implement 5-second countdown then start round 1
+- [x] Broadcast game:phase-change on every transition
 
 **Deliverable:** Teams join lobby; host starts game; countdown works
 
@@ -232,17 +232,17 @@ gantt
 
 > This is the most critical task. Get this right before moving on.
 
-- [ ] Create server/src/engine/game.engine.ts:
+- [x] Create server/src/engine/game.engine.ts:
   - Holds ServerGameState in memory (single source of truth)
   - startRound(roundNumber): generates decisions, starts timer
   - processRound(): collects decisions, applies effects, saves to DB
   - advancePhase(): state machine transitions
   - getPublicState(): sanitized state for broadcast
   - getTeamState(teamId): private state per team
-- [ ] ServerGameState fields: gameId, phase, currentRound, teams Map, availableDecisions, submittedDecisions Map, currentEvent, roundTimer, seed
-- [ ] Round timer: 60s countdown, emit round:tick every 5s, auto-process on expiry or all-submitted
-- [ ] Save round to round table
-- [ ] Emit round:start to all sockets
+- [x] ServerGameState fields: gameId, phase, currentRound, teams Map, availableDecisions, submittedDecisions Map, currentEvent, roundTimer, seed
+- [x] Round timer: 60s countdown, emit round:tick every 5s, auto-process on expiry or all-submitted
+- [x] Save round to round table
+- [x] Emit round:start to all sockets
 
 **Deliverable:** A round starts, times out, and processes in sequence
 
@@ -250,14 +250,14 @@ gantt
 
 #### Task 8 — Decision Engine `2h` `Critical`
 
-- [ ] Create server/src/engine/decision.engine.ts:
+- [x] Create server/src/engine/decision.engine.ts:
   - getAvailableDecisions(round, teamState): returns 4–6 decisions (seeded RNG)
   - applyDecision(team, decision, context): returns StatsDelta
   - Internal effectsTable matching architecture section 7.2
-- [ ] Implement all 9 decision types with base effects + diminishing returns modifiers
-- [ ] Filter decisions by team state (money, market share thresholds)
-- [ ] Handle player:decision socket event: validate, store, ack, check early-process trigger
-- [ ] Save decision_log record per submission
+- [x] Implement all 9 decision types with base effects + diminishing returns modifiers
+- [x] Filter decisions by team state (money, market share thresholds)
+- [x] Handle player:decision socket event: validate, store, ack, check early-process trigger
+- [x] Save decision_log record per submission
 
 **Deliverable:** Teams submit decisions; effects calculated correctly
 
@@ -277,14 +277,14 @@ gantt
 
 #### Task 9 — Event Engine `2h` `Critical`
 
-- [ ] Create server/src/engine/event.engine.ts:
+- [x] Create server/src/engine/event.engine.ts:
   - maybeGenerateEvent(round, rng): 60% chance, returns GameEvent or null
   - applyEvent(event, teams): returns per-team deltas
   - Internal eventPool[] with all 9 event types (architecture section 7.4)
-- [ ] Implement event target selection (all teams vs. specific teams)
-- [ ] Save round_event record to DB
-- [ ] Emit event:triggered to all sockets
-- [ ] Integrate into GameEngine.processRound()
+- [x] Implement event target selection (all teams vs. specific teams)
+- [x] Save round_event record to DB
+- [x] Emit event:triggered to all sockets
+- [x] Integrate into GameEngine.processRound()
 
 **Deliverable:** Random events fire 60% of rounds with correct effects
 
@@ -292,11 +292,11 @@ gantt
 
 #### Task 10 — Monopoly Detector `1h` `Critical`
 
-- [ ] Create server/src/engine/monopoly-detector.ts:
+- [x] Create server/src/engine/monopoly-detector.ts:
   - check(teams): returns MonopolyResult or null
   - All 4 monopoly conditions from architecture section 7.5
-- [ ] On detection: emit monopoly:detected, apply government intervention, boost other teams
-- [ ] Integrate into GameEngine.processRound() (runs after decisions + events)
+- [x] On detection: emit monopoly:detected, apply government intervention, boost other teams
+- [x] Integrate into GameEngine.processRound() (runs after decisions + events)
 
 **Deliverable:** Monopoly condition triggers intervention and notification
 
@@ -304,15 +304,15 @@ gantt
 
 #### Task 11 — Scoring Engine `2h` `Critical`
 
-- [ ] Create server/src/engine/scoring.engine.ts:
+- [x] Create server/src/engine/scoring.engine.ts:
   - calculateRoundScore(team, decision, context): number
   - calculateQuizScore(correct, timeTakenMs, timeLimit): number
   - getFinalRanking(teams): sorted RankedTeam[]
   - getLeaderboard(teams): public leaderboard array
-- [ ] Business Score + Decision Quality Score formulas (architecture section 7.6)
-- [ ] Create server/src/services/score.service.ts
-- [ ] Emit round:results with per-team deltas
-- [ ] Emit team:stats-update privately per team socket room
+- [x] Business Score + Decision Quality Score formulas (architecture section 7.6)
+- [x] Create server/src/services/score.service.ts
+- [x] Emit round:results with per-team deltas
+- [x] Emit team:stats-update privately per team socket room
 
 **Deliverable:** Scores calculated correctly; leaderboard updates each round
 
@@ -320,22 +320,22 @@ gantt
 
 #### Task 12 — Narrator Template System `3h` `Critical`
 
-- [ ] Create template JSON files in server/src/narrator/templates/:
+- [x] Create template JSON files in server/src/narrator/templates/:
   - decisions.json — 3–4 Vietnamese variants per decision type
   - events.json — 2–3 variants per event
   - monopoly.json — 4 variants with educational explanation
   - education.json — concept explanations
   - round-summary.json — 5 summary variants
-- [ ] Create server/src/narrator/template.system.ts:
+- [x] Create server/src/narrator/template.system.ts:
   - Load all JSON at startup into memory
   - selectTemplate(category, conditions): condition-filtered selection
   - Track last 2 used IDs per category to avoid repetition
-- [ ] Create server/src/narrator/narrator.engine.ts:
+- [x] Create server/src/narrator/narrator.engine.ts:
   - generate(trigger, context): NarrationResult
   - buildContext(gameState, teamState): variable map
   - injectVariables(template, context): final string with {teamName}, {marketShare} etc.
-- [ ] Integrate into GameEngine.processRound()
-- [ ] Emit narrator:message after each round
+- [x] Integrate into GameEngine.processRound()
+- [x] Emit narrator:message after each round
 
 **Deliverable:** Narration generated after every decision, event, and monopoly detection
 
@@ -386,7 +386,7 @@ gantt
 - [x] Create stores/ui.store.ts — modal/overlay/toast visibility flags
 - [x] Create hooks/use-socket.ts — initializes socket, registers all event handlers, cleans up on unmount
 - [x] Create hooks/use-game-state.ts — selector hooks for common slices
-- [ ] Create hooks/use-countdown.ts — setInterval countdown hook
+- [x] Create hooks/use-countdown.ts — setInterval countdown hook
 - [x] Create app/play/game/page.tsx shell — phase-based view rendering driven by gameStore.phase
 - [x] Register all Socket.IO event handlers: round:start, round:results, event:triggered, narrator:message, quiz:start, game:over
 
