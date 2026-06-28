@@ -11,6 +11,7 @@ import { SeededRNG } from '../utils/random.js';
 import { logger } from '../utils/logger.js';
 import { maybeGenerateEvent, applyEvent } from './event.engine.js';
 import { emitToRoom } from '../socket/index.js';
+import { check as detectMonopoly } from './monopoly-detector.js';
 
 export interface GameEngineCallbacks {
   onRoundStart: (roundNumber: number, decisions: Decision[], duration: number) => void;
@@ -228,6 +229,35 @@ export class ServerGameState {
         });
       } catch (err) {
         logger.error({ gameId: this.gameId, err }, 'Failed to broadcast event:triggered socket event.');
+      }
+    }
+
+    // 1.2 Run Monopoly Detector
+    const monopolyResult = detectMonopoly(activeTeams);
+    if (monopolyResult) {
+      logger.info(
+        { gameId: this.gameId, dominantTeamId: monopolyResult.dominantTeamId, monopolyType: monopolyResult.monopolyType },
+        'Monopoly detected! Applying antitrust regulation interventions.'
+      );
+
+      for (const team of activeTeams) {
+        if (team.id === monopolyResult.dominantTeamId) {
+          team.monopolyRisk = Math.max(0, team.monopolyRisk - monopolyResult.intervention.monopolyRiskReduction);
+          team.marketShare = Math.min(100, Math.max(0, Number((team.marketShare - monopolyResult.intervention.marketShareReduction).toFixed(1))));
+        } else {
+          team.marketShare = Math.min(100, Math.max(0, Number((team.marketShare + monopolyResult.intervention.otherTeamsMarketShareBoost).toFixed(1))));
+        }
+      }
+
+      // Broadcast monopoly:detected to all clients in the game room
+      try {
+        emitToRoom(`room:${this.gameId}`, SOCKET_EVENTS.MONOPOLY_DETECTED, {
+          teamId: monopolyResult.dominantTeamId,
+          teamName: monopolyResult.dominantTeamName,
+          explanation: monopolyResult.explanation,
+        });
+      } catch (err) {
+        logger.error({ gameId: this.gameId, err }, 'Failed to broadcast monopoly:detected socket event.');
       }
     }
 
