@@ -1,0 +1,62 @@
+{
+  "MARKET_DOMINANCE": [
+    {
+      "id": "mono_dom_001",
+      "text": "Cảnh báo chống độc quyền: Đội {{team}} đã đạt vị thế độc quyền kiểm soát khi thị phần đạt mức thống trị {{marketShare}}%. Quy luật cạnh tranh lành mạnh buộc nhà nước can thiệp tái cấu trúc thị trường.",
+      "conditions": {},
+      "type": "warning",
+      "relatedConcept": "MONOPOLY_FORMATION"
+    },
+    {
+      "id": "mono_dom_002",
+      "text": "Đội {{team}} vươn lên kiểm soát hơn một nửa thị trường (Thị phần: {{marketShare}}%). Sự tích tụ sản xuất lớn mở đường cho độc quyền hoàn toàn.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ],
+  "MONOPOLY_RISK_CEILING": [
+    {
+      "id": "mono_risk_001",
+      "text": "Chính phủ can thiệp: Đội {{team}} đã chạm trần rủi ro độc quyền cho phép. Mức độ thao túng thị trường quá cao buộc các cơ quan quản lý phải áp đặt các biện pháp trừng phạt tài chính.",
+      "conditions": {},
+      "type": "warning",
+      "relatedConcept": "STATE_REGULATION"
+    },
+    {
+      "id": "mono_risk_002",
+      "text": "Hành vi thao túng của đội {{team}} đã chạm giới hạn chịu đựng của thị trường. Chỉ số rủi ro độc quyền đạt ngưỡng khống chế.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ],
+  "COMBINED_DOMINANCE": [
+    {
+      "id": "mono_comb_001",
+      "text": "Cảnh báo kép: Đội {{team}} đã tích tụ sức mạnh to lớn khi kết hợp cả thị phần vượt trội ({{marketShare}}%) lẫn chỉ số rủi ro thao túng cao. Cơ quan quản lý quyết định áp dụng điều tiết giá bán tối đa.",
+      "conditions": {},
+      "type": "warning",
+      "relatedConcept": "MONOPOLY_PRICING"
+    },
+    {
+      "id": "mono_comb_002",
+      "text": "Sức ép từ vị thế độc quyền hỗn hợp của đội {{team}} khiến các đối thủ nhỏ hơn dần kiệt quệ tài chính.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ],
+  "RELATIVE_DOMINANCE": [
+    {
+      "id": "mono_rel_001",
+      "text": "Cảnh báo bất cân xứng: Đội {{team}} đã gia tăng cách biệt thị phần vượt quá 3 lần mức trung bình của các đối thủ khác, làm tê liệt sự vận động của quy luật tự do cạnh tranh.",
+      "conditions": {},
+      "type": "warning",
+      "relatedConcept": "COMPETITION_ELIMINATION"
+    },
+    {
+      "id": "mono_rel_002",
+      "text": "Cơ cấu thị trường bị bóp méo nghiêm trọng do sự thống trị tương đối của đội {{team}}, tạo ra rào cản gia nhập khổng lồ.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ]
+}

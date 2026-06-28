@@ -13,6 +13,7 @@ import { maybeGenerateEvent, applyEvent } from './event.engine.js';
 import { emitToRoom } from '../socket/index.js';
 import { check as detectMonopoly } from './monopoly-detector.js';
 import { calculateRoundScore, calculateLeaderboard, calculateFinalRanking } from './scoring.engine.js';
+import { NarratorEngine } from '../narrator/narrator.engine.js';
 
 export interface GameEngineCallbacks {
   onRoundStart: (roundNumber: number, decisions: Decision[], duration: number) => void;
@@ -44,6 +45,7 @@ export class ServerGameState {
   public currentEvent: GameEvent | null; // Reserved for future event engine integration
   public seed: string;
   public leaderboard: LeaderboardEntry[]; // Standings leaderboard tracking
+  public narrator: NarratorEngine; // Educational narrator engine
 
   private roundTimer: NodeJS.Timeout | null = null;
   private secondsLeft = 0;
@@ -67,6 +69,7 @@ export class ServerGameState {
     this.callbacks = callbacks;
     this.db = db || null;
     this.leaderboard = [];
+    this.narrator = new NarratorEngine();
   }
 
   /**
@@ -288,6 +291,80 @@ export class ServerGameState {
     // 1.4 Calculate Leaderboard ranking
     this.leaderboard = calculateLeaderboard(activeTeams, this.leaderboard);
 
+    // 1.5 Generate and broadcast educational narrator messages
+    const narratorRng = new SeededRNG(`${this.seed}_round_${this.currentRound}_narrator`);
+    const narratorMessages = [];
+
+    // General round summary
+    const summaryMsg = this.narrator.generateRoundSummary(this.currentRound, narratorRng);
+    narratorMessages.push(summaryMsg);
+
+    // Event narration
+    let eventMsg = null;
+    if (triggeredEvent) {
+      const targetTeam = activeTeams.find((t) => {
+        const delta = results.get(t.id);
+        return delta && (
+          delta.money !== 0 ||
+          delta.marketShare !== 0 ||
+          delta.technology !== 0 ||
+          delta.reputation !== 0 ||
+          delta.monopolyRisk !== 0
+        );
+      }) || null;
+      eventMsg = this.narrator.generateEventNarration({
+        type: triggeredEvent.type,
+        titleVi: triggeredEvent.titleVi,
+        descriptionVi: triggeredEvent.descriptionVi,
+      }, targetTeam, narratorRng);
+      narratorMessages.push(eventMsg);
+    }
+
+    // Decisions narrations
+    for (const team of activeTeams) {
+      const choice = this.submittedDecisions.get(team.id) || null;
+      if (choice) {
+        const msg = this.narrator.generateDecisionNarration(team, choice, narratorRng);
+        narratorMessages.push(msg);
+      }
+    }
+
+    // Monopoly warnings
+    let monopolyMsg = null;
+    if (monopolyResult) {
+      const dominantTeam = activeTeams.find((t) => t.id === monopolyResult.dominantTeamId) || null;
+      monopolyMsg = this.narrator.generateMonopolyNarration({
+        dominantTeamName: monopolyResult.dominantTeamName,
+        monopolyType: monopolyResult.monopolyType,
+        explanation: monopolyResult.explanation,
+      }, dominantTeam, narratorRng);
+      narratorMessages.push(monopolyMsg);
+    }
+
+    // Educational concept explainers
+    const concept = monopolyMsg?.relatedConcept || eventMsg?.relatedConcept || narratorMessages.find((m) => m.relatedConcept)?.relatedConcept;
+    if (concept) {
+      const eduMsg = this.narrator.generateEducationalNarration(concept, narratorRng);
+      if (eduMsg) {
+        narratorMessages.push(eduMsg);
+      }
+    }
+
+    // Broadcast narrator messages via socket
+    for (const msg of narratorMessages) {
+      try {
+        emitToRoom(`room:${this.gameId}`, SOCKET_EVENTS.NARRATOR_MESSAGE, {
+          text: msg.text,
+          type: msg.type,
+          ...(msg.relatedConcept ? { relatedConcept: msg.relatedConcept } : {}),
+        });
+      } catch (err) {
+        logger.error({ gameId: this.gameId, err }, 'Failed to broadcast narrator:message socket event.');
+      }
+    }
+
+    const combinedNarrationText = narratorMessages.map((m) => m.text).join('\n\n');
+
     // 2. Persist to DB if database is connected
     try {
       const activeDb = this.db || getDatabase();
@@ -295,10 +372,14 @@ export class ServerGameState {
         const roundRepo = new RoundRepository(activeDb);
         const round = roundRepo.findByGameIdAndRoundNumber(this.gameId, this.currentRound);
         if (round) {
-          // If event was triggered, update round record and save to round_event
-          if (triggeredEvent) {
-            roundRepo.update(round.id, { eventId: triggeredEvent.id });
+          // Update round record with eventId and combined narration text
+          roundRepo.update(round.id, {
+            eventId: triggeredEvent?.id || round.eventId,
+            narrationText: combinedNarrationText,
+          });
 
+          // If event was triggered, save to round_event
+          if (triggeredEvent) {
             const roundEventRepo = new RoundEventRepository(activeDb);
             const eventDeltas = applyEvent(triggeredEvent, activeTeams, eventRng);
             const targetedTeamIds = Array.from(eventDeltas.entries())

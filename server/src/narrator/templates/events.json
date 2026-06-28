@@ -1,0 +1,131 @@
+{
+  "crisis": [
+    {
+      "id": "evt_crisis_001",
+      "text": "Sự kiện {{event}} đã bùng nổ. Sự suy thoái kinh tế chu kỳ này phơi bày mâu thuẫn cơ bản của chủ nghĩa tư bản, làm giảm sút dòng tiền và thị phần của tất cả các đội.",
+      "conditions": {},
+      "type": "warning",
+      "relatedConcept": "CAPITALIST_CONTRADICTIONS"
+    },
+    {
+      "id": "evt_crisis_002",
+      "text": "Cuộc khủng hoảng tài chính {{event}} làm đóng băng hoạt động tín dụng, gây khó khăn cho toàn thị trường.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ],
+  "competitor": [
+    {
+      "id": "evt_comp_001",
+      "text": "Sự xuất hiện của đối thủ mới {{event}} chứng minh quy luật tự do cạnh tranh luôn vận động và liên tục phân chia lại thị phần của các doanh nghiệp.",
+      "conditions": {},
+      "type": "info"
+    },
+    {
+      "id": "evt_comp_002",
+      "text": "Thị trường chào đón đối thủ mới {{event}}. Áp lực cạnh tranh buộc các đội phải tối ưu hóa cấu trúc chi phí.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "inspection": [
+    {
+      "id": "evt_insp_001",
+      "text": "Cơ quan Quản lý tiến hành {{event}} nhằm kiểm soát hành vi lạm dụng vị thế độc quyền của đội có rủi ro cao nhất. Đây là vai trò can thiệp điều tiết của nhà nước tư bản.",
+      "conditions": {},
+      "type": "warning",
+      "relatedConcept": "STATE_REGULATION"
+    },
+    {
+      "id": "evt_insp_002",
+      "text": "Cuộc thanh tra chống độc quyền {{event}} làm chậm các kế hoạch tích tụ và thâu tóm của đội dẫn đầu.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ],
+  "strike": [
+    {
+      "id": "evt_strike_001",
+      "text": "Cuộc đình công {{event}} bùng phát tại doanh nghiệp của đội {{team}}. Mâu thuẫn giai cấp giữa tư bản và lao động làm suy giảm nghiêm trọng năng suất sản xuất.",
+      "conditions": {},
+      "type": "warning"
+    },
+    {
+      "id": "evt_strike_002",
+      "text": "Phong trào bãi công {{event}} đòi cải thiện điều kiện làm việc nổ ra tại doanh nghiệp của đội {{team}}.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ],
+  "tech_breakthrough": [
+    {
+      "id": "evt_tech_001",
+      "text": "Sự kiện khoa học công nghệ {{event}} diễn ra. Lực lượng sản xuất mới phát triển vượt bậc thúc đẩy trình độ công nghệ toàn ngành nâng cao.",
+      "conditions": {},
+      "type": "info"
+    },
+    {
+      "id": "evt_tech_002",
+      "text": "Đột phá công nghệ mới {{event}} mang lại thời cơ lớn cho các doanh nghiệp nhanh chân ứng dụng.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "foreign_investment": [
+    {
+      "id": "evt_for_001",
+      "text": "Dòng vốn ngoại {{event}} đổ vào đội {{team}}. Đây là sự bộc lộ của xuất khẩu tư bản nhằm tối đa hóa tỷ suất lợi nhuận tại các vùng địa lý mới.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "EXPORT_OF_CAPITAL"
+    },
+    {
+      "id": "evt_for_002",
+      "text": "Dòng vốn đầu tư trực tiếp nước ngoài {{event}} mang lại nguồn lực tăng trưởng dồi dào cho đội {{team}}.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "disaster": [
+    {
+      "id": "evt_dis_001",
+      "text": "Thiên tai dịch bệnh {{event}} phá hủy một phần cơ sở hạ tầng, làm đứt gãy chuỗi cung ứng hàng hóa toàn cầu.",
+      "conditions": {},
+      "type": "warning"
+    },
+    {
+      "id": "evt_dis_002",
+      "text": "Sự cố khách quan {{event}} đe dọa các hoạt động giao thương, làm tổn hại đến lợi nhuận của toàn bộ thị trường.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ],
+  "trade_agreement": [
+    {
+      "id": "evt_trade_001",
+      "text": "Việc ký kết {{event}} tạo điều kiện cho tự do hóa thương mại quốc tế, mở rộng quy mô lưu thông hàng hóa.",
+      "conditions": {},
+      "type": "info"
+    },
+    {
+      "id": "evt_trade_002",
+      "text": "Hiệp định thương mại tự do {{event}} dỡ bỏ các rào cản thuế quan, tăng cường khả năng xuất khẩu sản phẩm.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "boycott": [
+    {
+      "id": "evt_boycott_001",
+      "text": "Đội {{team}} đối mặt với làn sóng tẩy chay {{event}} của người tiêu dùng, gây ảnh hưởng trực tiếp đến uy tín thương hiệu.",
+      "conditions": {},
+      "type": "warning"
+    },
+    {
+      "id": "evt_boycott_002",
+      "text": "Chiến dịch tẩy chay xã hội {{event}} nổ ra, giáng một đòn mạnh vào doanh số của đội {{team}}.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "general": [
+    {
+      "id": "sum_gen_001",
+      "text": "Vòng chơi thứ {{round}} đã khép lại. Cục diện thị trường và cán cân quyền lực tích lũy vốn giữa các đội đang biến động dữ dội.",
+      "conditions": {},
+      "type": "info"
+    },
+    {
+      "id": "sum_gen_002",
+      "text": "Kết thúc vòng {{round}}. Cuộc đua giành giật thị phần và thâu tóm tư bản đang bước vào giai đoạn quyết liệt và kịch tính hơn.",
+      "conditions": {},
+      "type": "info"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "CAPITAL_CONCENTRATION": [
+    {
+      "id": "edu_conc_001",
+      "text": "Kiến thức Kinh tế Chính trị: Tập trung tư bản (Capital Concentration) là việc tăng quy mô tư bản cá biệt bằng cách tích lũy giá trị thặng dư trực tiếp từ quá trình sản xuất.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "CAPITAL_CONCENTRATION"
+    }
+  ],
+  "CAPITAL_CENTRALIZATION": [
+    {
+      "id": "edu_cent_001",
+      "text": "Kiến thức Kinh tế Chính trị: Tích tụ tư bản (Capital Centralization) là việc tăng quy mô tư bản bằng cách hợp nhất nhiều tư bản cá biệt có sẵn thành một tư bản lớn hơn thông qua sáp nhập và thâu tóm.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "CAPITAL_CENTRALIZATION"
+    }
+  ],
+  "STATE_MONOPOLY_CAPITALISM": [
+    {
+      "id": "edu_state_001",
+      "text": "Kiến thức Kinh tế Chính trị: Chủ nghĩa tư bản độc quyền nhà nước (State Monopoly Capitalism) là sự kết hợp sức mạnh của các tổ chức độc quyền tư nhân với sức mạnh của nhà nước tư bản nhằm duy trì thống trị và thu lợi nhuận độc quyền cao.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "STATE_MONOPOLY_CAPITALISM"
+    }
+  ],
+  "EXPORT_OF_CAPITAL": [
+    {
+      "id": "edu_export_001",
+      "text": "Kiến thức Kinh tế Chính trị: Xuất khẩu tư bản (Export of Capital) là việc mang tư bản ra nước ngoài (đầu tư trực tiếp FDI hoặc gián tiếp FII) nhằm chiếm lĩnh nguồn tài nguyên và khai thác lao động giá rẻ ở nước nhập khẩu.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "EXPORT_OF_CAPITAL"
+    }
+  ],
+  "CAPITALIST_CONTRADICTIONS": [
+    {
+      "id": "edu_contra_001",
+      "text": "Kiến thức Kinh tế Chính trị: Khủng hoảng kinh tế chu kỳ bắt nguồn sâu xa từ mâu thuẫn cơ bản của chủ nghĩa tư bản — mâu thuẫn giữa tính chất xã hội hóa của lực lượng sản xuất với chế độ chiếm hữu tư nhân tư bản chủ nghĩa.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "CAPITALIST_CONTRADICTIONS"
+    }
+  ],
+  "STATE_REGULATION": [
+    {
+      "id": "edu_reg_001",
+      "text": "Kiến thức Kinh tế Chính trị: Sự can thiệp kinh tế của nhà nước thông qua các đạo luật chống độc quyền là cơ chế cần thiết để kiềm chế sự tự hủy hoại của cạnh tranh tự do khi tư bản tích tụ đến mức độ độc quyền kiểm soát.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "STATE_REGULATION"
+    }
+  ]
+}

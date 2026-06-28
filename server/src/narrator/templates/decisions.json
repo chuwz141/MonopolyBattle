@@ -1,0 +1,133 @@
+{
+  "invest_tech": [
+    {
+      "id": "dec_tech_001",
+      "text": "Đội {{team}} vừa đầu tư phát triển nghiên cứu và phát triển công nghệ sản xuất, nâng chỉ số công nghệ lên {{technology}}. Chỉ số uy tín thương hiệu đạt {{reputation}}.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "TECHNOLOGICAL_PROGRESS"
+    },
+    {
+      "id": "dec_tech_002",
+      "text": "Nhằm tối ưu hóa năng suất, đội {{team}} đã đầu tư mạnh vào khoa học công nghệ (Công nghệ: {{technology}}). Đây là một bước đi tất yếu trong quá trình hiện đại hóa tư bản.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "acquire": [
+    {
+      "id": "dec_acq_001",
+      "text": "Đội {{team}} tiến hành thâu tóm doanh nghiệp nhỏ trên thị trường (Thị phần: {{marketShare}}%). Đây là biểu hiện trực tiếp của quá trình tập trung tư bản.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "CAPITAL_CONCENTRATION"
+    },
+    {
+      "id": "dec_acq_002",
+      "text": "Để củng cố ngôi vị thống trị, đội {{team}} chọn chiến lược thâu tóm đối thủ trực tiếp. Thị phần tăng lên mức {{marketShare}}%.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ],
+  "merge": [
+    {
+      "id": "dec_merge_001",
+      "text": "Quyết định sáp nhập của đội {{team}} giúp tập hợp lượng lớn tư bản độc lập thành một khối liên kết lớn mạnh.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "CAPITAL_CENTRALIZATION"
+    },
+    {
+      "id": "dec_merge_002",
+      "text": "Đội {{team}} thực hiện sáp nhập chiến lược nhằm gia tăng quy mô hoạt động và chiếm ưu thế trước các đối thủ.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "reduce_prices": [
+    {
+      "id": "dec_red_001",
+      "text": "Đội {{team}} chủ động cắt giảm giá bán sản phẩm nhằm kích cầu tiêu dùng và thu hút thêm khách hàng mới.",
+      "conditions": {},
+      "type": "info"
+    },
+    {
+      "id": "dec_red_002",
+      "text": "Chiến dịch hạ giá của đội {{team}} đã bắt đầu, trực tiếp gia tăng áp lực cạnh tranh lên phần còn lại của thị trường.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "expand_factories": [
+    {
+      "id": "dec_exp_fact_001",
+      "text": "Đội {{team}} đầu tư mở rộng thêm nhà máy và dây chuyền sản xuất mới nhằm tối ưu hóa chi phí sản xuất theo quy mô.",
+      "conditions": {},
+      "type": "info"
+    },
+    {
+      "id": "dec_exp_fact_002",
+      "text": "Để mở rộng quy mô tích lũy, đội {{team}} đã tiến hành mở thêm các chi nhánh nhà xưởng mới.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "accept_gov_support": [
+    {
+      "id": "dec_gov_001",
+      "text": "Đội {{team}} đã chính thức nhận gói hỗ trợ và trợ cấp tài khóa từ chính phủ. Mối liên kết này là biểu hiện của chủ nghĩa tư bản độc quyền nhà nước.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "STATE_MONOPOLY_CAPITALISM"
+    },
+    {
+      "id": "dec_gov_002",
+      "text": "Gói trợ cấp từ chính phủ giúp đội {{team}} nâng cao năng lực tài chính và giảm thiểu rủi ro kinh doanh.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "lobby": [
+    {
+      "id": "dec_lob_001",
+      "text": "Đội {{team}} xúc tiến hoạt động vận động hành lang chính sách nhằm tạo dựng các điều luật có lợi cho hoạt động thương mại của mình.",
+      "conditions": {},
+      "type": "warning"
+    },
+    {
+      "id": "dec_lob_002",
+      "text": "Hoạt động vận động hành lang chính sách của đội {{team}} giúp họ củng cố lợi thế độc quyền pháp lý.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "export": [
+    {
+      "id": "dec_export_001",
+      "text": "Đội {{team}} đẩy mạnh hoạt động xuất khẩu tư bản và hàng hóa ra thị trường quốc tế nhằm mở rộng nguồn lợi nhuận thặng dư.",
+      "conditions": {},
+      "type": "education",
+      "relatedConcept": "EXPORT_OF_CAPITAL"
+    },
+    {
+      "id": "dec_export_002",
+      "text": "Đội {{team}} chính thức thâm nhập thị trường quốc tế mới, gia tăng doanh số xuất khẩu hàng hóa.",
+      "conditions": {},
+      "type": "info"
+    }
+  ],
+  "raise_prices": [
+    {
+      "id": "dec_raise_001",
+      "text": "Đội {{team}} tận dụng sức mạnh thương hiệu tốt (Uy tín: {{reputation}}) để nâng giá bán, thu lợi nhuận độc quyền cao hơn.",
+      "conditions": {},
+      "type": "info"
+    },
+    {
+      "id": "dec_raise_002",
+      "text": "Quyết định tăng giá bán của đội {{team}} có thể mang lại biên lợi nhuận lớn hơn nhưng cũng ẩn chứa rủi ro mất khách hàng.",
+      "conditions": {},
+      "type": "warning"
+    }
+  ]
+}
