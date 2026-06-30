@@ -77,10 +77,11 @@ async function runTask7Tests() {
   const publicState = engine.getPublicState();
   const t1State = engine.getTeamState(team1Id);
 
-  if (publicState.teams[0].id !== team1Id || publicState.teams[0].submitted !== false) {
+  const team0 = publicState.teams[0];
+  if (!team0 || team0.id !== team1Id || team0.submitted !== false) {
     throw new Error('Public state mismatch');
   }
-  if (t1State.myTeam.money !== 8000 || t1State.availableDecisions.length === 0) {
+  if (!t1State.myTeam || t1State.myTeam.money !== 8000 || t1State.availableDecisions.length === 0) {
     throw new Error('Team state private details missing');
   }
   console.log('✅ Public and private team states retrieved successfully.');

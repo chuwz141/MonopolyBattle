@@ -18,7 +18,7 @@ import { getEngine } from '../engine/game-engine.registry.js';
 // ---------------------------------------------------------------------------
 
 const playerDecisionSchema = z.object({
-  roundId: z.string().uuid('Mã vòng chơi không hợp lệ'),
+  roundId: z.string().min(1, 'Mã vòng chơi không hợp lệ'),
   decisionType: z.string().min(1, 'Loại quyết định không hợp lệ'),
 });
 
@@ -80,18 +80,34 @@ export function registerGameEventHandlers(socket: MonopolySocket): void {
 
     try {
       // 3. Retrieve round and verify active state constraints
-      const round = roundRepo.findById(roundId);
+      let round;
+      const engine = getEngine(gameId);
+      if (roundId === 'current') {
+        const game = gameRepo.findById(gameId);
+        if (!game) {
+          socket.emit(SOCKET_EVENTS.ERROR, { code: 'GAME_NOT_FOUND', message: viErrors.gameNotFound });
+          return;
+        }
+        const roundNumber = engine ? engine.currentRound : game.currentRound;
+        round = roundRepo.findByGameIdAndRoundNumber(gameId, roundNumber);
+      } else {
+        round = roundRepo.findById(roundId);
+      }
+
       if (!round) {
         socket.emit(SOCKET_EVENTS.ERROR, { code: 'ROUND_NOT_FOUND', message: 'Không tìm thấy vòng chơi.' });
         return;
       }
+
+      const activeRoundId = round.id;
 
       if (round.gameId !== gameId) {
         socket.emit(SOCKET_EVENTS.ERROR, { code: 'FORBIDDEN_ROUND_ACCESS', message: viErrors.forbidden });
         return;
       }
 
-      if (round.phase !== 'decision') {
+      const activePhase = engine ? engine.phase : round.phase;
+      if (activePhase !== 'decision') {
         socket.emit(SOCKET_EVENTS.ERROR, {
           code: 'INVALID_PHASE',
           message: 'Hiện tại không ở trong giai đoạn đưa ra quyết định.',
@@ -100,7 +116,7 @@ export function registerGameEventHandlers(socket: MonopolySocket): void {
       }
 
       // 4. Prevent duplicate submission per team per round
-      const existingSubmission = decisionLogRepo.findByRoundIdAndTeamId(roundId, teamId);
+      const existingSubmission = decisionLogRepo.findByRoundIdAndTeamId(activeRoundId, teamId);
       if (existingSubmission) {
         socket.emit(SOCKET_EVENTS.ERROR, {
           code: 'DECISION_LOCKED',
@@ -128,7 +144,7 @@ export function registerGameEventHandlers(socket: MonopolySocket): void {
       // 6. Save decision log entry
       decisionLogRepo.create({
         id: uuid(),
-        roundId,
+        roundId: activeRoundId,
         teamId,
         decisionType,
         decisionDataJson: JSON.stringify({ cost: Math.abs(delta.money) }),
@@ -142,7 +158,7 @@ export function registerGameEventHandlers(socket: MonopolySocket): void {
       });
 
       logger.info(
-        { gameId, roundId, teamId, decisionType, delta },
+        { gameId, roundId: activeRoundId, teamId, decisionType, delta },
         'Player decision submitted and processed successfully.'
       );
 
@@ -153,11 +169,11 @@ export function registerGameEventHandlers(socket: MonopolySocket): void {
       // 8. Trigger early round phase processing if all active teams have submitted
       const allTeams = teamRepo.findByGameId(gameId);
       const activeTeams = allTeams.filter((t) => t.status === 'playing' || t.status === 'ready');
-      const submissions = decisionLogRepo.findMany({ roundId });
+      const submissions = decisionLogRepo.findMany({ roundId: activeRoundId });
 
       if (submissions.length === activeTeams.length && activeTeams.length > 0) {
         // Transition the round phase in DB
-        roundRepo.update(roundId, { phase: 'event' });
+        roundRepo.update(activeRoundId, { phase: 'event' });
 
         // Broadcast game phase update to all rooms
         emitToRoom(`room:${gameId}`, SOCKET_EVENTS.GAME_PHASE_CHANGE, {
@@ -166,13 +182,12 @@ export function registerGameEventHandlers(socket: MonopolySocket): void {
         });
 
         logger.info(
-          { gameId, roundId },
+          { gameId, roundId: activeRoundId },
           'All teams have submitted decisions. Early processing initiated: transitioned to event phase.'
         );
       }
 
       // 9. Forward to in-memory engine if active (engine handles early round processing)
-      const engine = getEngine(gameId);
       if (engine) {
         try {
           engine.submitDecision(teamId, decisionType);
@@ -235,12 +250,17 @@ export function registerGameEventHandlers(socket: MonopolySocket): void {
       return;
     }
 
+    let targetQuestionId = questionId;
+    if (questionId === 'current') {
+      targetQuestionId = engine.activeQuizQuestion?.id ?? '';
+    }
+
     // 6. Delegate to engine (engine handles duplicate detection, scoring, and finalization)
     try {
-      engine.submitQuizAnswer(teamId, questionId, selectedOption, timeTakenMs);
+      engine.submitQuizAnswer(teamId, targetQuestionId, selectedOption, timeTakenMs);
 
       logger.info(
-        { gameId, teamId, questionId, selectedOption, timeTakenMs },
+        { gameId, teamId, questionId: targetQuestionId, selectedOption, timeTakenMs },
         'Quiz answer forwarded to engine successfully.'
       );
     } catch (err) {

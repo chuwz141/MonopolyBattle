@@ -180,6 +180,36 @@ export class ServerGameState {
 
     logger.info({ gameId: this.gameId, roundNumber }, 'Round started successfully in Game Engine.');
 
+    // 1. Sync round start database records
+    try {
+      const activeDb = this.db ?? getDatabase();
+      if (activeDb) {
+        const gameRepo = new GameRepository(activeDb);
+        gameRepo.update(this.gameId, { currentRound: roundNumber });
+
+        const roundRepo = new RoundRepository(activeDb);
+        const existing = roundRepo.findByGameIdAndRoundNumber(this.gameId, roundNumber);
+        if (!existing) {
+          roundRepo.create({
+            id: uuid(),
+            gameId: this.gameId,
+            roundNumber,
+            phase: 'decision',
+            availableDecisionsJson: JSON.stringify(roundCandidates),
+            eventId: null,
+            narrationText: null,
+          });
+        } else {
+          roundRepo.update(existing.id, {
+            phase: 'decision',
+            availableDecisionsJson: JSON.stringify(roundCandidates),
+          });
+        }
+      }
+    } catch (err) {
+      logger.error({ gameId: this.gameId, err }, 'Failed to persist round start status in database.');
+    }
+
     const duration = 60;
     this.callbacks.onRoundStart(roundNumber, roundCandidates, duration);
 

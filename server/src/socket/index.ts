@@ -9,6 +9,8 @@ import type {
 } from '@monopoly/shared';
 import { config } from '../config/index.js';
 import { logger } from '../utils/logger.js';
+import { getDatabase } from '../config/database.js';
+import { GameRepository } from '../repositories/game.repository.js';
 import { handleConnection } from './connection.handler.js';
 import { registerHostHandlers } from './host-event.handler.js';
 import { registerGameEventHandlers } from './game-event.handler.js';
@@ -83,6 +85,37 @@ export const io: MonopolyServer = new Server({
 // Configure JWT Authentication middleware for Socket.IO
 io.use((socket: MonopolySocket, next: (err?: Error) => void) => {
   const token = socket.handshake.auth.token;
+  const role = socket.handshake.auth.role;
+  const roomCode = socket.handshake.auth.roomCode;
+
+  // Bypass token verification for projectors using valid room codes
+  if (role === 'projector' && typeof roomCode === 'string' && roomCode.length === 6) {
+    try {
+      const activeDb = getDatabase();
+      const gameRepo = new GameRepository(activeDb);
+      const game = gameRepo.findByRoomCode(roomCode.toUpperCase());
+      if (game) {
+        socket.data = {
+          role: 'projector',
+          gameId: game.id,
+        };
+        logger.info(
+          { socketId: socket.id, gameId: game.id, role: 'projector' },
+          'Projector connection authenticated by room code'
+        );
+        return next();
+      } else {
+        logger.warn(
+          { socketId: socket.id, roomCode },
+          'Projector connection rejected: Room code not found'
+        );
+        return next(new Error('Authentication error: Room code not found'));
+      }
+    } catch (error) {
+      logger.error({ socketId: socket.id, err: error }, 'Projector database lookup failed');
+      return next(new Error('Authentication error: Database error'));
+    }
+  }
 
   if (!token || typeof token !== 'string') {
     logger.warn({ socketId: socket.id }, 'Socket connection rejected: No auth token provided');

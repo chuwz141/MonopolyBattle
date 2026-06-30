@@ -1,5 +1,6 @@
-import { createRequire } from 'module';
 import { logger } from '../utils/logger.js';
+import fs from 'fs';
+import path from 'path';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -61,11 +62,27 @@ const ROUND_DIFFICULTY_MAP: Record<number, number> = {
 // Load quiz bank
 // ---------------------------------------------------------------------------
 
-const require = createRequire(import.meta.url);
-
 function loadQuizBank(): QuizQuestion[] {
   try {
-    const data: unknown = require('./data/quizzes.json');
+    let filePath = path.resolve(process.cwd(), 'src/education/data/quizzes.json');
+    if (!fs.existsSync(filePath)) {
+      filePath = path.resolve(process.cwd(), 'dist/education/data/quizzes.json');
+    }
+    if (!fs.existsSync(filePath)) {
+      filePath = path.resolve(process.cwd(), 'education/data/quizzes.json');
+    }
+    if (!fs.existsSync(filePath)) {
+      // Fallback: check relative path from current module
+      filePath = path.resolve(path.dirname(new URL(import.meta.url).pathname), 'data/quizzes.json');
+    }
+
+    // Windows compatibility pathname decode
+    if (filePath.startsWith('/') && process.platform === 'win32') {
+      filePath = filePath.substring(1);
+    }
+
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const data: unknown = JSON.parse(content);
     if (!Array.isArray(data)) {
       throw new TypeError('quizzes.json must be a JSON array');
     }

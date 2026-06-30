@@ -310,6 +310,18 @@ export function registerHostHandlers(socket: MonopolySocket): void {
       return;
     }
 
+    const engine = getEngine(gameId);
+    if (engine) {
+      try {
+        engine.advancePhase();
+        return;
+      } catch (err) {
+        logger.error({ gameId, err }, 'Failed to advance phase on GameEngine.');
+        socket.emit(SOCKET_EVENTS.ERROR, { code: 'SERVER_ERROR', message: viErrors.serverError });
+        return;
+      }
+    }
+
     const roundRepo = new RoundRepository(db);
     const round = roundRepo.findByGameIdAndRoundNumber(gameId, game.currentRound);
     if (!round) {

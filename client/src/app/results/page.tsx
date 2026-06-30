@@ -147,7 +147,7 @@ function Podium({
 // Results Page
 // ---------------------------------------------------------------------------
 
-export default function ResultsPage(): React.JSX.Element {
+function ResultsContent(): React.JSX.Element {
   const searchParams = useSearchParams();
   const gameId = searchParams.get("gameId") ?? "";
 
@@ -481,5 +481,21 @@ export default function ResultsPage(): React.JSX.Element {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResultsPage(): React.JSX.Element {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <p className="text-muted-foreground animate-pulse text-sm">
+            {vi.pages.results.loading}
+          </p>
+        </div>
+      }
+    >
+      <ResultsContent />
+    </React.Suspense>
   );
 }
